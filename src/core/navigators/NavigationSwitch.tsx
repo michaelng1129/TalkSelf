@@ -4,6 +4,7 @@ import StartScreenNavigation from './StartScreenNavigation';
 import { useAuth } from '../authContext';
 import MainScreenNavigation from './MainScreenNavigation';
 import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from 'react-native-paper';
 
 const NavigationSwitch = () => {
     const { isLoading, userToken } = useAuth();
@@ -21,7 +22,9 @@ const NavigationSwitch = () => {
             {
                 userToken ?
                     <MainScreenNavigation />
-                    : <StartScreenNavigation />
+                    : <Provider>
+                        <StartScreenNavigation />
+                    </Provider>
             }
         </NavigationContainer>
     );

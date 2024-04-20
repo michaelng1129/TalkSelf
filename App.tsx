@@ -6,12 +6,9 @@ import { AuthProvider } from './src/core';
 import NavigationSwitch from './src/core/navigators/NavigationSwitch';
 
 const Main = () => (
-  <Provider>
-    <AuthProvider>
-      <NavigationSwitch />
-    </AuthProvider>
-  </Provider>
-
+  <AuthProvider>
+    <NavigationSwitch />
+  </AuthProvider>
 )
 
 export default Main;
