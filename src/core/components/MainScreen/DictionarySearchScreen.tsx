@@ -3,11 +3,29 @@ import React, { memo, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
 import { open, QueryResult } from "react-native-quick-sqlite";
+import { TextToSpeech } from "../..";
+import RNSecureStorage from "rn-secure-storage";
 
 const DictionarySearchScreen = () => {
     const route = useRoute();
     const { searchText } = route.params as { searchText: string };
     const [results, setResults] = useState<{ pos: string, def: string }[]>([]);
+
+    const getTextToSpeech = async () => {
+        try {
+            const jwt = await RNSecureStorage.getItem("jwtToken");
+            if (jwt === null) {
+                console.error('JWT is null');
+                return;
+            }
+            console.log(searchText);
+            console.log('jwt: ', jwt);
+            
+            TextToSpeech(searchText, jwt); 
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     useEffect(() => {
         const searchInDatabase = async () => {
@@ -41,7 +59,7 @@ const DictionarySearchScreen = () => {
         <View style={styles.container}>
             <View style={styles.searchContainer}>
                 <Text style={styles.searchText}>{searchText}</Text>
-                <TouchableOpacity style={styles.microphoneButton}>
+                <TouchableOpacity style={styles.microphoneButton} onPress={getTextToSpeech}>
                     <Button icon="play">Press me</Button>
                 </TouchableOpacity>
             </View>

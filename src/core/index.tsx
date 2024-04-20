@@ -1,5 +1,6 @@
 export { default as logIn } from './API/logIn';
 export { default as register } from './API/register';
+export { default as TextToSpeech } from './API/TextToSpeech'
 
 export { default as MainScreenNavigation } from './navigators/MainScreenNavigation';
 export { default as StartScreenNavigation } from './navigators/StartScreenNavigation';
