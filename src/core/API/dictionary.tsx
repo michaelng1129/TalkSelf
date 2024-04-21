@@ -1,6 +1,6 @@
 import { open } from 'react-native-quick-sqlite';
 import axios from 'axios';
-import * as RNFS from '@dr.pogodin/react-native-fs';
+import * as RNFS from '@dr.pogodin/react-native-fs';;
 
 const mountDatabase = async () => {
     try {
@@ -12,23 +12,25 @@ const mountDatabase = async () => {
 
             const db = open({ name: 'EngDB.sqlite' });
 
-            await db.execute('CREATE TABLE IF NOT EXISTS words (word TEXT, pos TEXT, def TEXT);');
+            db.execute('CREATE TABLE IF NOT EXISTS words (word TEXT, pos TEXT, def TEXT);');
             console.log('Table "words" created');
 
             db.transaction((tx) => {
                 for (const { word, pos, def } of jsonData) {
-                    tx.execute('INSERT INTO words (word, pos, def) VALUES (?, ?, ?);', [word, pos, def]);
+                    tx.executeAsync('INSERT INTO words (word, pos, def) VALUES (?, ?, ?);', [word, pos, def]);
                     console.log(`Insert: ${word}, ${pos}, ${def}`);
                 }
             });
 
-            await db.execute('CREATE INDEX IF NOT EXISTS idx_word ON words (word);');
+            db.execute('CREATE INDEX IF NOT EXISTS idx_word ON words (word);');
             console.log('Index "idx_word" created');
 
             console.log('Database mounted successfully');
+            return true;
         } else {
             console.log('EngDB.sqlite file already exists. Skipping download and import.');
         }
+        return true;
     } catch (error: any) {
         console.error('Error mounting database:', error.message);
     }

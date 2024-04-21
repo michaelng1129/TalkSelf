@@ -1,14 +1,42 @@
 import React, { memo, useEffect, useState } from "react";
-import { FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Navigation } from "../../core";
-import mountDatabase from "../../core/API/dictionary";
+import { ActivityIndicator, FlatList, Image, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { mountDatabase, Navigation } from "../../core";
 import { open, QueryResult } from "react-native-quick-sqlite";
 
 type Props = {
     navigation: Navigation;
 };
+const HomeScreen = ({ navigation }: { navigation: any }) => {
+    const [loading, setLoading] = useState(true);
 
-const HomeScreen = ({ navigation }: Props) => {
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const success = await mountDatabase();
+                if (success) {
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error('Error mounting database:', error);
+                setLoading(false);
+            }
+        };
+
+        loadData();
+    }, []);
+
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+                <MainScreen navigation={navigation} />
+            )}
+        </View>
+    )
+}
+
+const MainScreen = ({ navigation }: Props) => {
     const [searchText, setSearchText] = useState<string>('');
     const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -16,20 +44,17 @@ const HomeScreen = ({ navigation }: Props) => {
         navigation.navigate('DictionarySearchScreen', { searchText });
     }
 
-    const goTextToSpeech = () => { 
+    const goTextToSpeech = () => {
         navigation.navigate('TextToSpeechScreen');
     }
 
-    useEffect(() => {
-        mountDatabase()
-    }, []);
 
     const searchWords = async (word: string) => {
         try {
 
             const db = open({ name: 'EngDB.sqlite' });
 
-            const result: QueryResult = await db.execute(
+            const result: QueryResult = db.execute(
                 `SELECT DISTINCT word FROM words WHERE word LIKE ? ORDER BY word LIMIT 50;`,
                 [word + '%']
             );
@@ -71,46 +96,49 @@ const HomeScreen = ({ navigation }: Props) => {
 
         Keyboard.dismiss();
     };
-    
+
 
     return (
         <View style={styles.container}>
-            <Text style={styles.heading}>Dictionary</Text>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Search..."
-                    onChangeText={handleWordChange}
-                    value={searchText}
-                />
-                {searchText !== '' && (
-                    <TouchableOpacity onPress={clearSearchText}>
-                        <Text style={styles.icon}>X</Text>
-                    </TouchableOpacity>
-                )}
-                <TouchableOpacity style={styles.button} onPress={handleSearch}>
-                    <Text style={styles.buttonText}>Search</Text>
-                </TouchableOpacity>
-            </View>
-            {suggestions.length > 0 && (
-                <FlatList
-                    data={suggestions}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity onPressIn={() => handleSelectSuggestion(item)}>
-                            <Text style={styles.suggestion}>{item}</Text>
+            <View style={styles.searchArea}>
+                <Text style={styles.heading}>Dictionary</Text>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Search..."
+                        onChangeText={handleWordChange}
+                        value={searchText}
+                    />
+                    {searchText !== '' && (
+                        <TouchableOpacity onPress={clearSearchText}>
+                            <Text style={styles.icon}>X</Text>
                         </TouchableOpacity>
                     )}
-                    keyExtractor={(item) => item}
-                />
-            )}
-            <TouchableOpacity style={styles.touchContainer} onPress={goTextToSpeech}>
-                <Text>go 2 Dict</Text>
-            </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={handleSearch}>
+                        <Text style={styles.buttonText}>Search</Text>
+                    </TouchableOpacity>
+                </View>
+                {suggestions.length > 0 && (
+                    <FlatList
+                        style={styles.flatList}
+                        data={suggestions}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity onPressIn={() => handleSelectSuggestion(item)}>
+                                <Text style={styles.suggestion}>{item}</Text>
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor={(item) => item}
+                    />
+                )}
+            </View>
+            <View style={styles.bottomArea}>
+                <TouchableOpacity style={styles.touchContainer} onPress={goTextToSpeech}>
+                    <Image source={require('../../../src/assets/faceGen.jpg')} style={styles.image} resizeMode="contain" />
+                </TouchableOpacity>
+            </View>
         </View>
-        
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -118,6 +146,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5F5F5',
         padding: 20,
+    },
+    searchArea: {
+        flex: 0.7,
+        width: '100%',
+        //justifyContent: 'center',
+        alignItems: 'center',
+    },
+    flatList: {
+        flex: 1,
+        width: '100%',
+    },
+    bottomArea: {
+        flex: 0.3,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     heading: {
         fontSize: 30,
@@ -162,13 +206,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    touchContainer:{
-        width: 300,
-        height: 150,
-        backgroundColor: 'lightblue',
-        marginBottom: 20,
+    touchContainer: {
+        //marginBottom: 20,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    image: {
+        flex: 1,
+        width: 100,
+        height: 100,
     }
 });
 export default memo(HomeScreen);

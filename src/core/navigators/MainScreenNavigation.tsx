@@ -2,10 +2,9 @@ import React, { memo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen, QuizScreen, SettingScreen, StudyPlanScreen, TalkIndexScreen } from '../../screens';
-import { DictionarySearchScreen, TextToSpeechScreen, ReadingQuizScreen, WrittingQuizScreen, ListeningQuizScreen, SpeakingQuizScreen, SpeechRecognitionRootScreen, } from '../components/MainScreen';
+import { DictionarySearchScreen, TextToSpeechScreen, ReadingQuizScreen, WrittingQuizScreen, ListeningQuizScreen, SpeakingQuizScreen, SpeechRecognitionRootScreen, TextToSpeechPlayerScreen, } from '../components/MainScreen';
 import { HeaderBackButton } from '@react-navigation/elements';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { NavigationContainer } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -49,7 +48,12 @@ const HomeStackNavigator = () => (
     <Stack.Screen name='DictionarySearchScreen' component={DictionarySearchScreen} options={({ navigation }) => ({
       headerTitle: '', headerLeft: () => (<HeaderBackButton labelVisible={false} onPress={() => { navigation.goBack(); }} />)
     })} />
-    <Stack.Screen name='TextToSpeechScreen' component={TextToSpeechScreen} options={{ headerShown: false }} />
+    <Stack.Screen name='TextToSpeechScreen' component={TextToSpeechScreen} options={({ navigation }) => ({
+      headerTitle: '', headerLeft: () => (<HeaderBackButton labelVisible={false} onPress={() => { navigation.goBack(); }} />)
+    })} />
+        <Stack.Screen name='TextToSpeechPlayerScreen' component={TextToSpeechPlayerScreen} options={({ navigation }) => ({
+      headerTitle: '', headerLeft: () => (<HeaderBackButton labelVisible={false} onPress={() => { navigation.goBack(); }} />)
+    })} />
   </Stack.Navigator>
 );
 

@@ -7,6 +7,8 @@ export { default as Button } from './Button';
 export { default as DictionarySearchScreen } from './DictionarySearchScreen'
 
 export { default as TextToSpeechScreen } from './TextToSpeechScreen';
+export { default as TextToSpeechPlayerScreen } from './TextToSpeechPlayerScreen'
+
 
 export { default as ReadingQuizScreen } from './ReadingQuizScreen';
 export { default as WrittingQuizScreen } from './WrittingQuizScreen';
