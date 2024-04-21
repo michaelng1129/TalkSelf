@@ -1,15 +1,19 @@
 import { useRoute } from "@react-navigation/native";
 import React, { memo, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { open, QueryResult } from "react-native-quick-sqlite";
 import { TextToSpeech } from "../..";
+import Video from 'react-native-video';
 import RNSecureStorage from "rn-secure-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ActivityIndicator } from "react-native-paper";
 
 const DictionarySearchScreen = () => {
     const route = useRoute();
     const { searchText } = route.params as { searchText: string };
     const [results, setResults] = useState<{ pos: string, def: string }[]>([]);
+    const [videoUri, setVideoUri] = useState<string | null>(null);
+    const [showVideo, setShowVideo] = useState(false);
 
     const getTextToSpeech = async () => {
         try {
@@ -18,10 +22,13 @@ const DictionarySearchScreen = () => {
                 console.error('JWT is null');
                 return;
             }
-            console.log(searchText);
-            console.log('jwt: ', jwt);
-            
-            TextToSpeech(searchText, jwt); 
+            await TextToSpeech(searchText, jwt);
+            const file = await AsyncStorage.getItem('TTsPath');
+            console.log("file", file)
+            if (file) {
+                setVideoUri(file);
+            }
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -31,7 +38,7 @@ const DictionarySearchScreen = () => {
         const searchInDatabase = async () => {
             try {
                 const db = open({ name: 'EngDB.sqlite' });
-                const result: QueryResult = await db.execute(
+                const result: QueryResult = db.execute(
                     `SELECT pos, def FROM words WHERE word = ?;`,
                     [searchText]
                 );
@@ -55,18 +62,65 @@ const DictionarySearchScreen = () => {
         searchInDatabase();
     }, [searchText]);
 
+    const handleVideoEnd = () => {
+        setShowVideo(false);
+    };
+
+    const clearVideoFile = async () => {
+        try {
+            if (videoUri) {
+                await AsyncStorage.removeItem('TTsPath');
+                setVideoUri(null);
+            }
+        } catch (error) {
+            console.error('Error clearing video file: ', error);
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            clearVideoFile();
+        };
+    }, []);
+
+
     return (
         <View style={styles.container}>
             <View style={styles.searchContainer}>
                 <Text style={styles.searchText}>{searchText}</Text>
-                <TouchableOpacity style={styles.microphoneButton} onPress={getTextToSpeech}>
-                    <Button icon="play">Press me</Button>
-                </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+                {showVideo ? (
+                    <View style={{ flex: 1 }}>
+                        {videoUri ? (
+                            <View style={styles.videoContainer}>
+                                <Video
+                                    source={{ uri: videoUri }}
+                                    controls={false}
+                                    style={styles.video}
+                                    resizeMode="contain"
+                                    onEnd={handleVideoEnd}
+                                />
+                            </View>
+                        ) : (
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <ActivityIndicator size={'small'} />
+                                <Text>Video is Loading...</Text>
+                            </View>
+                        )}
+                    </View>
+                ) : (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Button
+                            title="Show Video"
+                            onPress={() => { setShowVideo(true), getTextToSpeech() }}
+                        />
+                    </View>)}
             </View>
             <ScrollView style={styles.resultsContainer}>
                 {results.map((result, index) => (
                     <View key={index} style={styles.resultContainer}>
-                        <Text style={styles.resultLabel}>POS: </Text>
+                        <Text style={styles.resultLabel}>Part of Speech: </Text>
                         <Text style={styles.resultText}>{result.pos}</Text>
                         <Text style={styles.resultLabel}>Definition: </Text>
                         <Text style={styles.resultText}>{result.def}</Text>
@@ -84,18 +138,14 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#F0F0F0',
         height: '20%',
     },
     searchText: {
         fontSize: 30,
         fontWeight: 'bold',
-    },
-    microphoneButton: {
-        // Style your microphone button here
     },
     resultsContainer: {
         flex: 1,
@@ -113,6 +163,17 @@ const styles = StyleSheet.create({
     resultText: {
         fontSize: 16,
         marginBottom: 3,
+    },
+    videoContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    video: {
+        width: '60%',
+        height: '60%',
+        flex: 1,
+
     },
 });
 

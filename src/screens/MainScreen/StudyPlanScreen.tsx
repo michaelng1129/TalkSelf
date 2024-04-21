@@ -1,70 +1,50 @@
-import React, { memo, useRef, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import { SvgChart } from '@wuba/react-native-echarts';
-import * as echarts from 'echarts/core';
-import { BarChart } from 'echarts/charts';
-import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components';
+import React, { memo, useEffect, useState } from 'react';
+import { View, StyleSheet, Text, Button } from 'react-native';
+import { Navigation } from '../../core';
+import axios from 'axios';
+import * as RNFS from '@dr.pogodin/react-native-fs';
+import Video from 'react-native-video';
 
-// Register components
-echarts.use([TitleComponent, TooltipComponent, GridComponent, BarChart]);
+type Props = {
+  navigation: Navigation;
+};
 
-// 定義 option 物件的結構
-interface ChartOption {
-  xAxis: {
-    type: 'category',
-    data: string[],
+const StudyPlanScreen = () => {
+  const [videoUri, setVideoUri] = useState<string | null>('dsasd');
+
+  useEffect(() => {
+    fetchVideo();
+  }, []);
+
+  const fetchVideo = async () => {
+    try {
+      const response = await axios.get('http://192.168.1.2:8000/api/test')
+      const videoBase64 = response.data.video_base64;
+      const filePath = `${RNFS.DocumentDirectoryPath}/video.mp4`;
+      await RNFS.writeFile(filePath, videoBase64, 'base64');
+
+      setVideoUri(filePath);
+    } catch (error) {
+      console.error('获取视频文件时出错:', error);
+    }
   };
-  yAxis: {
-    type: 'value',
+
+  const handleButtonClick = async () => {
+    fetchVideo();
   };
-  series: {
-    data: number[],
-    type: 'bar',
-  }[];
-}
-
-const E_HEIGHT = 250;
-const E_WIDTH = 300;
-
-function StudyPlanScreen({ option }: { option: ChartOption }) {
-//   const chartRef = useRef<any>(null);
-
-//   useEffect(() => {
-//     let chart: any;
-//     if (chartRef.current) {
-//       chart = echarts.init(chartRef.current, 'light', {
-//         renderer: 'svg',
-//         width: E_WIDTH,
-//         height: E_HEIGHT,
-//       });
-//       chart.setOption(option);
-//     }
-//     return () => chart?.dispose();
-//   }, [option]);
-
-//   return <SvgChart ref={chartRef} />;
-// }
-
-// const StudyPlanScreen = () => {
-//   const option: ChartOption = {
-//     xAxis: {
-//       type: 'category',
-//       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-//     },
-//     yAxis: {
-//       type: 'value',
-//     },
-//     series: [
-//       {
-//         data: [120, 200, 150, 80, 70, 110, 130],
-//         type: 'bar',
-//       },
-//     ],
-//   }
 
   return (
     <View style={styles.container}>
-      {/* <ChartComponent option={option} /> */}
+      <Button title="重新加载视频" onPress={handleButtonClick} />
+      {videoUri ? (
+        <Video
+          source={{ uri: videoUri }}
+          controls={true}
+          style={styles.video}
+        />
+      ) : (
+        <Text>正在加载视频...</Text>
+      )}
     </View>
   );
 };
@@ -75,7 +55,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  video: {
+    width: '100%',
+    height: 300,
+  },
 });
 
 export default memo(StudyPlanScreen);
-
