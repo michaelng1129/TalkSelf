@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { StyleSheet, View, TextInput, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import RNSecureStorage from "rn-secure-storage";
 import { Navigation, TextToSpeechFull } from "../..";
@@ -17,6 +17,8 @@ const TextToSpeechScreen = ({ navigation }: { navigation: any }) => {
         setInputText(text);
     };
 
+
+
     const handleSubmit = async () => {
         try {
             setLoading(true);
@@ -31,9 +33,9 @@ const TextToSpeechScreen = ({ navigation }: { navigation: any }) => {
             console.log("file", file)
             if (file) {
                 setVideoUri(file);
-                console.log('set:', videoUri)
             }
-            navigation.navigate('TextToSpeechPlayerScreen', { Uri: videoUri });
+            navigation.navigate('TextToSpeechPlayerScreen');
+            setVideoUri(null);
         } catch (error) {
             console.error('Error:', error);
         } finally {
@@ -103,7 +105,7 @@ const styles = StyleSheet.create({
         width: '90%',
     },
     button: {
-        backgroundColor: '#007BFF',
+        backgroundColor: '#000000', 
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,

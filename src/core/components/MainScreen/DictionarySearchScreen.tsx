@@ -104,17 +104,16 @@ const DictionarySearchScreen = () => {
                             </View>
                         ) : (
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <ActivityIndicator size={'small'} />
+                                <ActivityIndicator size={'small'} color={'black'}/>
                                 <Text>Video is Loading...</Text>
                             </View>
                         )}
                     </View>
                 ) : (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Button
-                            title="Show Video"
-                            onPress={() => { setShowVideo(true), getTextToSpeech() }}
-                        />
+                        <TouchableOpacity style={styles.playButton} onPress={() => { setShowVideo(true), getTextToSpeech() }}>
+                            <Text style={styles.buttonText} >Play Video</Text>
+                        </TouchableOpacity>
                     </View>)}
             </View>
             <ScrollView style={styles.resultsContainer}>
@@ -174,6 +173,14 @@ const styles = StyleSheet.create({
         height: '60%',
         flex: 1,
 
+    },
+    playButton: {
+        backgroundColor: '#000000', 
+        padding: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: '#FFFFFF', 
     },
 });
 

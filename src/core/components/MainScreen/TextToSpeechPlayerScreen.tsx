@@ -1,20 +1,24 @@
 import { useRoute } from "@react-navigation/native";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Video from "react-native-video";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 const TextToSpeechPlayerScreen = () => {
-    const route = useRoute();
-    const { Uri } = route.params as { Uri: string };
-    console.log('ssfts:', Uri)
-
+    const [videoUri, setVideoUri] = useState<string | null>(null);
     useEffect(() => {
+        getPath()
         return () => {
             handleCleanup();
         };
     }, []);
+
+    const getPath = async () => {
+        const file = await AsyncStorage.getItem('TTsfullPath');
+        setVideoUri(file)
+    }
 
     const handleCleanup = async () => {
         try {
@@ -32,10 +36,10 @@ const TextToSpeechPlayerScreen = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            {Uri ? (
+            {videoUri ? (
                 <View style={styles.videoContainer}>
                     <Video
-                        source={{ uri: Uri }}
+                        source={{ uri: videoUri }}
                         controls={true}
                         style={styles.video}
                         resizeMode="contain"
@@ -43,7 +47,7 @@ const TextToSpeechPlayerScreen = () => {
                 </View>
             ) : (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size={'small'} />
+                    <ActivityIndicator size={'small'} color={"black"}/>
                     <Text>Video is Loading...</Text>
                 </View>
             )}
@@ -54,14 +58,14 @@ const TextToSpeechPlayerScreen = () => {
 }
 const styles = StyleSheet.create({
     videoContainer: {
-        // flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     video: {
-        // width: '60%',
-        // height: '60%',
-        // flex: 1,
+        width: '100%',
+        height: '100%',
+        flex: 1,
 
     },
 });

@@ -118,6 +118,7 @@ const MainScreen = ({ navigation }: Props) => {
                         <Text style={styles.buttonText}>Search</Text>
                     </TouchableOpacity>
                 </View>
+                
                 {suggestions.length > 0 && (
                     <FlatList
                         style={styles.flatList}
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     },
     flatList: {
         flex: 1,
-        width: '100%',
+        //width: '100%',
     },
     bottomArea: {
         flex: 0.3,
@@ -205,6 +206,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+        flex: 1,
+        width: "100%"
     },
     touchContainer: {
         //marginBottom: 20,

@@ -1,18 +1,21 @@
 import React, { memo } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Navigation } from '../../core';
 
 type Props = {
     navigation: Navigation;
 };
 const TalkIndexScreen = ({ navigation }: Props) => {
-    const handleButtonPress = () =>{
+    const handleButtonPress = () => {
         navigation.navigate('SpeechRecognitionRootScreen');
     }
 
     return (
+
         <View style={styles.container}>
-            <Button title="Go to Main Talk Screen" onPress={handleButtonPress} />
+            <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+                <Text style={styles.buttonText}>Start Speaking Training</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -22,6 +25,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    button: {
+        backgroundColor: 'black', 
+        padding: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white', 
+        textAlign: 'center',
+        fontSize: 16,
     },
 });
 

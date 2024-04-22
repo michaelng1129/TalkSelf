@@ -228,10 +228,10 @@ const MainTalkScreen = () => {
 
                 {/* Messages */}
                 {
-                    messages.length > 0 ? (
+                    
                         <View style={{ marginTop: 4, flex: 1 }}>
                             <Text style={{ fontSize: wp(5), color: theme.colors.primary, marginLeft: 4 }}>Teacher</Text>
-                            <View style={{ height: hp(58), backgroundColor: theme.colors.chatArea_backgroundColor, borderRadius: 16, padding: 16 }}>
+                            <View style={{ height: hp(40), backgroundColor: theme.colors.chatArea_backgroundColor, borderRadius: 16, padding: 16 }}>
                                 <ScrollView ref={scrollViewRef} bounces={false} showsVerticalScrollIndicator={false} style={{ flex: 1, flexDirection: 'column', paddingVertical: 4 }}>
                                     {
                                         messages.map((message, index) => {
@@ -259,9 +259,9 @@ const MainTalkScreen = () => {
                                 </ScrollView>
                             </View>
                         </View>
-                    ) : (
-                        <ChatView />
-                    )
+                    // messages.length > 0 ? () : (
+                    //     <ChatView />
+                    // )
                 }
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', bottom: 50 }}>
                     <ScrollView
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     },
     safeAreaView: {
         flex: 1,
-        marginHorizontal: 10,
+        marginHorizontal: 15,
     },
     micContainer: {
         alignItems: 'center',

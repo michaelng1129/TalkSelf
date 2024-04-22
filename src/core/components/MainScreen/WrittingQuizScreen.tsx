@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { StyleSheet, View, TextInput, Button, Text, Dimensions } from "react-native";
+import { StyleSheet, View, TextInput, Button, Text, Dimensions, TouchableOpacity } from "react-native";
 import { Navigation } from "../..";
 
 const windowHeight = Dimensions.get('window').height;
@@ -37,12 +37,15 @@ const WritingQuizScreen = ({ navigation }: Props) => {
                     value={inputText}
                     multiline
                     placeholder="Type your answer here..."
+                    textAlignVertical="top"
                 />
             </View>
 
             {/* Submit Button Section */}
             <View style={[styles.section, { height: windowHeight * 0.1 }]}>
-                <Button title="Submit" onPress={handleSubmit} />
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Submit</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -58,6 +61,7 @@ const styles = StyleSheet.create({
     section: {
         justifyContent: 'center',
         alignItems: 'center',
+
     },
     title: {
         fontSize: 18,
@@ -71,6 +75,16 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 5,
         paddingHorizontal: 10,
+    },
+    button: {
+        backgroundColor: 'black',
+        padding: 15,
+        borderRadius: 10,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        textAlign: 'center',
     },
 });
 

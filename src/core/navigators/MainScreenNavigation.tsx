@@ -16,15 +16,15 @@ const MainScreenNavigation = () => (
       tabBarShowLabel: false,
       tabBarIcon: ({ color, size, focused }) => {
         let iconName: string = '';
-
+        
         if (route.name === 'Home') {
           iconName = focused ? 'home' : 'home-outline';
         } else if (route.name === 'StudyPlan') {
-          iconName = focused ? 'podium' : 'podium-outline';
+          iconName = focused ? 'person-add' : 'person-add-outline';
         } else if (route.name === 'Talking') {
           iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
         } else if (route.name === 'Quiz') {
-          iconName = focused ? 'person-add' : 'person-add-outline';
+          iconName = focused ? 'podium' : 'podium-outline';
         } else if (route.name === 'Setting') {
           iconName = focused ? 'settings' : 'settings-outline';
         }
@@ -34,7 +34,7 @@ const MainScreenNavigation = () => (
       tabBarActiveTintColor: 'black',
     })}>
     <Tab.Screen name='Home' component={HomeStackNavigator} options={{ title: '' }} />
-    <Tab.Screen name='StudyPlan' component={StudyPlanScreen} options={{ title: '' }} />
+    {/* <Tab.Screen name='StudyPlan' component={StudyPlanScreen} options={{ title: '' }} /> */}
     <Tab.Screen name='Talking' component={TalkStackNavigator} options={{ title: '' }} />
     <Tab.Screen name='Quiz' component={QuizStackNavigator} options={{ title: '' }} />
     <Tab.Screen name='Setting' component={SettingScreen} options={{ title: '' }} />

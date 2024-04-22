@@ -14,20 +14,25 @@ const QuizScreen = ({ navigation }: Props) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('ReadingQuizScreen')}>
-                <Text style={styles.text}>Reading</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('WrittingQuizScreen')}>
-                <Text style={styles.text}>Writing</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('ListeningQuizScreen')}>
-                <Text style={styles.text}>Listening</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('SpeakingQuizScreen')}>
-                <Text style={styles.text}>Speaking</Text>
-            </TouchableOpacity>
+            <View style={styles.row}>
+                <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('ReadingQuizScreen')}>
+                    <Text style={styles.text}>Reading Quiz</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('WrittingQuizScreen')}>
+                    <Text style={styles.text}>Writing Quiz</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.row}>
+                <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('ListeningQuizScreen')}>
+                    <Text style={styles.text}>Listening Quiz</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('SpeakingQuizScreen')}>
+                    <Text style={styles.text}>Speaking Quiz</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
+    
 }
 
 const styles = StyleSheet.create({
@@ -36,17 +41,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    touchArea: {
-        width: 300,
-        height: 150,
-        backgroundColor: 'lightblue',
+    row: {
+        flexDirection: 'row',
         marginBottom: 20,
+    },
+    touchArea: {
+        width: 150, 
+        height: 300,
+        backgroundColor: 'black',
+        marginRight: 20, 
         justifyContent: 'center',
         alignItems: 'center',
     },
     text: {
         fontSize: 18,
-    }
+        color: 'white'
+    },
 });
 
 export default memo(QuizScreen);

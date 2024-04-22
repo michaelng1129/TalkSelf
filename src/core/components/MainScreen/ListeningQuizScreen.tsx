@@ -85,11 +85,11 @@ const styles = StyleSheet.create({
     startButton: {
         paddingVertical: 10,
         paddingHorizontal: 20,
-        backgroundColor: '#2196F3',
+        backgroundColor: 'black',
         borderRadius: 5,
     },
     startButtonText: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#FFFFFF',
     },
     quizContainer: {
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingVertical: 10,
         paddingHorizontal: 20,
-        backgroundColor: '#2196F3',
+        backgroundColor: 'black',
         borderRadius: 5,
     },
     nextButtonText: {

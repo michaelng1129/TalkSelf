@@ -30,7 +30,7 @@ const ReadingQuizScreen = ({ navigation }: Props) => {
 
     // Sample quiz questions (Hardcoded)
     const quizQuestions = [
-        { question: "Question 1", options: ["Option 1", "Option 2", "Option 3"], correctOptionIndex: 0 },
+        { question: "What was the nature of Iran's attack on Israel over the weekend?", options: ["Israel's infrastructure.", "Israeli military bases", "Israeli-owned vessel in the Arabian Sea."], correctOptionIndex: 0 },
         { question: "Question 2", options: ["Option 1", "Option 2", "Option 3"], correctOptionIndex: 1 },
         // Add more questions as needed
     ];
@@ -56,7 +56,10 @@ const ReadingQuizScreen = ({ navigation }: Props) => {
                             <Text style={styles.question}>{question.question}</Text>
                             {/* Render options */}
                             {question.options.map((option, optionIndex) => (
-                                <Text key={optionIndex} style={styles.option}>{option}</Text>
+                                <View key={optionIndex} style={styles.optionContainer}>
+                                    <Text style={styles.optionSymbol}>•</Text>
+                                    <Text style={styles.optionText}>{option}</Text>
+                                </View>
                             ))}
                         </View>
                     ))}
@@ -92,9 +95,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    option: {
-        fontSize: 16,
+    optionContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 5,
+    },
+    optionSymbol: {
+        fontSize: 16,
+        marginRight: 5,
+    },
+    optionText: {
+        fontSize: 16,
     }
 });
 
