@@ -12,7 +12,7 @@ const register = async (formData: FormData) => {
         await RNSecureStorage.setItem('jwtToken', response.data.access_token, { accessible: ACCESSIBLE.WHEN_UNLOCKED });
         return true;
     } catch (error: any) {
-        console.error('SignUp Error:', error);
+        console.log('SignUp Error:', error);
         if (error.response) {
             console.log('Server Response Data:', error.response.data);
         }

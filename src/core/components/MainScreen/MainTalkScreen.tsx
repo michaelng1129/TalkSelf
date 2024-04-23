@@ -3,7 +3,6 @@ import { StyleSheet, View, SafeAreaView, Image, ScrollView, Text, TouchableOpaci
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSpeechRecognition } from 'react-native-voicebox-speech-rec';
 import { useCheckSpeechRecPermissions, useRequestSpeechRecPermissions, } from './SpeechRecordPermissions.tsx';
-import { ChatView } from ".";
 import { theme } from "../..";
 import { RESULTS } from "react-native-permissions";
 import { MicrophoneButton, ButtonToolTips } from "./";
@@ -15,11 +14,11 @@ interface Message {
     content: string;
 }
 
-
 const MainTalkScreen = () => {
     const [messages, setMessage] = useState<Message[]>([]);
     const [speaking, setSpeaking] = useState(false);
     const [isInConversationMode, setIsInConversationMode] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [userMicPermissionGranted, setUserMicPermissionGranted] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
 
@@ -27,6 +26,7 @@ const MainTalkScreen = () => {
         setMessage([]);
         Tts.stop();
         setSpeaking(false);
+        setLoading(false)
     }
 
     const stopSpeaking = () => {
@@ -100,7 +100,7 @@ const MainTalkScreen = () => {
     }, [setSpeechRecCompletedHandler, messages]);
 
     const fetchResponse = (trimmedMessage: string) => {
-
+        setLoading(true);
         let newMessages = [...messages];
         newMessages.push({ role: 'user', content: trimmedMessage });
         setMessage([...newMessages]);
@@ -109,6 +109,7 @@ const MainTalkScreen = () => {
         updateScrollView();
 
         apiCall(newMessages).then(res => {
+            setLoading(false);
             //console.log('newMessages ', res)
             if (res.success) {
                 if ('data' in res) {
@@ -130,8 +131,8 @@ const MainTalkScreen = () => {
         setSpeaking(true);
 
         Tts.speak(message.content, {
-            iosVoiceId: '', 
-            rate: 0.4, 
+            iosVoiceId: '',
+            rate: 0.4,
             androidParams: {
                 KEY_PARAM_PAN: 0,
                 KEY_PARAM_VOLUME: 0.5,
@@ -220,48 +221,44 @@ const MainTalkScreen = () => {
 
     return (
         <View style={styles.container}>
-            
+
             <SafeAreaView style={styles.safeAreaView}>
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <Image source={require('../../../assets/teacher.jpeg')} style={{ height: hp(15), width: wp(25) }} />
+                    <Image source={require('../../../assets/bot.png')} style={{ height: hp(15), width: wp(30), borderRadius: Math.round(wp(30)) / 2 }} />
                 </View>
 
                 {/* Messages */}
                 {
-                    
-                        <View style={{ marginTop: 4, flex: 1 }}>
-                            <Text style={{ fontSize: wp(5), color: theme.colors.primary, marginLeft: 4 }}>Teacher</Text>
-                            <View style={{ height: hp(40), backgroundColor: theme.colors.chatArea_backgroundColor, borderRadius: 16, padding: 16 }}>
-                                <ScrollView ref={scrollViewRef} bounces={false} showsVerticalScrollIndicator={false} style={{ flex: 1, flexDirection: 'column', paddingVertical: 4 }}>
-                                    {
-                                        messages.map((message, index) => {
-                                            if (message.role === 'assistant') {
-                                                return (
-                                                    <View key={index} style={{ width: wp(50), backgroundColor: theme.colors.chatUserLeftOutput, borderRadius: 12, borderTopLeftRadius: 0, padding: 8 }}>
+                    <View style={{ marginTop: 4, flex: 1 }}>
+                        <Text style={{ fontSize: wp(5), color: theme.colors.primary, marginLeft: 4 }}>AI Talker</Text>
+                        <View style={{ height: hp(40), backgroundColor: theme.colors.chatArea_backgroundColor, borderRadius: 16, padding: 16 }}>
+                            <ScrollView ref={scrollViewRef} bounces={false} showsVerticalScrollIndicator={false} style={{ flex: 1, flexDirection: 'column', paddingVertical: 4 }}>
+                                {
+                                    messages.map((message, index) => {
+                                        if (message.role === 'assistant') {
+                                            return (
+                                                <View key={index} style={{ width: wp(50), backgroundColor: theme.colors.chatUserLeftOutput, borderRadius: 12, borderTopLeftRadius: 0, padding: 8 }}>
+                                                    <Text style={{ color: theme.colors.chatText }}>
+                                                        {message.content}
+                                                    </Text>
+                                                </View>
+                                            )
+                                        } else {
+                                            return (
+                                                <View key={index} style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 4, }}>
+                                                    <View style={{ width: wp(50), backgroundColor: theme.colors.chatUserOutput, borderRadius: 12, borderTopRightRadius: 0, padding: 8 }}>
                                                         <Text style={{ color: theme.colors.chatText }}>
                                                             {message.content}
                                                         </Text>
                                                     </View>
-                                                )
-                                            } else {
-                                                return (
-                                                    <View key={index} style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 4, }}>
-                                                        <View style={{ width: wp(50), backgroundColor: theme.colors.chatUserOutput, borderRadius: 12, borderTopRightRadius: 0, padding: 8 }}>
-                                                            <Text style={{ color: theme.colors.chatText }}>
-                                                                {message.content}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </ScrollView>
-                            </View>
+                                                </View>
+                                            )
+                                        }
+                                    })
+                                }
+                            </ScrollView>
                         </View>
-                    // messages.length > 0 ? () : (
-                    //     <ChatView />
-                    // )
+                    </View>
                 }
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', bottom: 50 }}>
                     <ScrollView
@@ -270,21 +267,28 @@ const MainTalkScreen = () => {
                         style={styles.recognizedTextArea}>
                         {speechRecContentArea}
                     </ScrollView>
-                    <MicrophoneButton
-                        containerStyle={styles.micContainer}
-                        disabled={false}
-                        handleButtonPressed={handleConversationButtonPressed}
-                        handleButtonReleased={handleConversationButtonReleased}
-                        handleButtonSwipeUp={handleConversationButtonSwipedUp}
-                        isInListeningMode={isInConversationMode}
-                        tooltipText={
-                            <ButtonToolTips
-                                userIsSpeaking={isInConversationMode}
-                                userMicPermissionBlocked={userMicPermissionGranted === false}
+                    {
+                        loading ? (
+                            <Image
+                                source={require('../../../assets/loading.gif')}
+                                style={{ width: hp(5), height: hp(5) }}
                             />
-                        }
-                    />
-
+                        ) :
+                            <MicrophoneButton
+                                containerStyle={styles.micContainer}
+                                disabled={false}
+                                handleButtonPressed={handleConversationButtonPressed}
+                                handleButtonReleased={handleConversationButtonReleased}
+                                handleButtonSwipeUp={handleConversationButtonSwipedUp}
+                                isInListeningMode={isInConversationMode}
+                                tooltipText={
+                                    <ButtonToolTips
+                                        userIsSpeaking={isInConversationMode}
+                                        userMicPermissionBlocked={userMicPermissionGranted === false}
+                                    />
+                                }
+                            />
+                    }
                     {
                         messages.length > 0 && (
                             <TouchableOpacity onPress={clear} style={{ backgroundColor: theme.colors.clearBotton, borderRadius: 24, padding: 8, position: 'absolute', right: 30 }}>

@@ -1,5 +1,5 @@
 import React, { memo, useContext, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, Alert } from 'react-native';
 import { Navigation, theme, emailValidator, passwordValidator, logIn, useAuth } from '../../core';
 import { Background, Logo, Header, Button, TextInput, BackButton } from '../../core/components/StartScreen';
 
@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation }: Props) => {
         if (success) {
             login();
         } else {
-            //alert('Arrr matey! No treasure found. (Invalid credentials)');
+            Alert.alert('Invalid Email or Password');
         }
     };
 
@@ -53,6 +53,7 @@ const LoginScreen = ({ navigation }: Props) => {
                 autoComplete="email"
                 textContentType="emailAddress"
                 keyboardType="email-address"
+                
             />
 
             <TextInput
@@ -73,7 +74,7 @@ const LoginScreen = ({ navigation }: Props) => {
                 </TouchableOpacity>
             </View>
 
-            <Button mode="contained" onPress={onLoginPressed}>
+            <Button mode="contained" onPress={onLoginPressed} style={{ backgroundColor: theme.colors.primary }}>
                 Login
             </Button>
 

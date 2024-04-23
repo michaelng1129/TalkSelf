@@ -1,13 +1,14 @@
 import React, { memo, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import AudioRecorderPlayer, { AudioEncoderAndroidType, AudioSet, AudioSourceAndroidType } from 'react-native-audio-recorder-player';
 import speakingDifflib from "../../API/speakingDifflib";
-import * as RNFS from '@dr.pogodin/react-native-fs';;
+import * as RNFS from '@dr.pogodin/react-native-fs';
+import RNSecureStorage from "rn-secure-storage";
 
 const SpeakingQuizScreen = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [audioPath, setAudioPath] = useState("");
-    const audioRecorderPlayer = new AudioRecorderPlayer();
+    const [audioRecorderPlayer, setAudioRecorderPlayer] = useState(new AudioRecorderPlayer());
 
     const onStartRecording = async () => {
         try {
@@ -16,7 +17,7 @@ const SpeakingQuizScreen = () => {
             setAudioPath(audioUri);
 
         } catch (error) {
-            console.error("Error starting recording:", error);
+            console.log("Error starting recording:", error);
         }
     };
 
@@ -24,26 +25,32 @@ const SpeakingQuizScreen = () => {
         try {
             const result = await audioRecorderPlayer.stopRecorder();
             setIsRecording(false);
-            console.log(result)
             const audioBlob = await RNFS.readFile(audioPath, 'base64');
-            console.log(audioBlob)
-            const formData = new FormData();
-            formData.append('audio', audioBlob);
-            //speakingDifflib(formData)
+            const jwt = await RNSecureStorage.getItem("jwtToken");
+            if (jwt === null) {
+                console.error('JWT is null');
+                return;
+            }
+            speakingDifflib(audioBlob, jwt, question)
 
         } catch (error) {
-            console.error("Error stopping recording:", error);
+            console.log("Error stopping recording:", error);
+        } finally {
+            setAudioRecorderPlayer(new AudioRecorderPlayer());
         }
     };
 
 
     // Sample hardcoded question
-    const question = "Please repeat the following sentence: \n \n'The quick brown fox jumps over the lazy dog.'";
+    const heading = "Please repeat the following sentence: "
+    const question = 'The quick brown fox jumps over the lazy dog.'
+
 
     return (
         <View style={styles.container}>
             {/* Question */}
             <View style={styles.questionContainer}>
+                <Text style={styles.questionText}>{heading}</Text>
                 <Text style={styles.questionText}>{question}</Text>
             </View>
 
@@ -55,9 +62,6 @@ const SpeakingQuizScreen = () => {
                     <Text style={styles.recordButtonText}>{isRecording ? "Stop Recording" : "Start Recording"}</Text>
                 </TouchableOpacity>
             </View>
-
-            {audioPath ? <Text style={styles.audioPath}>{audioPath}</Text> : null}
-
         </View>
     );
 }

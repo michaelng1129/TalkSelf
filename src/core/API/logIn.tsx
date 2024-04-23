@@ -19,7 +19,7 @@ const logIn = async (email: string, password: string) => {
         await RNSecureStorage.setItem('jwtToken', response.data.access_token, { accessible: ACCESSIBLE.WHEN_UNLOCKED });
         return true;
     } catch (error: any) {
-        console.error('Error occurred during login:', error);
+        console.log('Error occurred during login:', error);
         return false;
     }
 };

@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { mountDatabase, Navigation } from "../../core";
+import { mountDatabase, Navigation, theme } from "../../core";
 import { open, QueryResult } from "react-native-quick-sqlite";
 
 type Props = {
@@ -17,7 +17,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     setLoading(false);
                 }
             } catch (error) {
-                console.error('Error mounting database:', error);
+                console.log('Error mounting database:', error);
                 setLoading(false);
             }
         };
@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color={theme.colors.primary} />
             ) : (
                 <MainScreen navigation={navigation} />
             )}
@@ -93,8 +93,7 @@ const MainScreen = ({ navigation }: Props) => {
     const handleSelectSuggestion = (word: string) => {
         setSearchText(word);
         setSuggestions([]);
-
-        Keyboard.dismiss();
+        handleSearch();
     };
 
 
@@ -114,23 +113,21 @@ const MainScreen = ({ navigation }: Props) => {
                             <Text style={styles.icon}>X</Text>
                         </TouchableOpacity>
                     )}
-                    <TouchableOpacity style={styles.button} onPress={handleSearch}>
-                        <Text style={styles.buttonText}>Search</Text>
-                    </TouchableOpacity>
                 </View>
-                
-                {suggestions.length > 0 && (
-                    <FlatList
-                        style={styles.flatList}
-                        data={suggestions}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity onPressIn={() => handleSelectSuggestion(item)}>
-                                <Text style={styles.suggestion}>{item}</Text>
-                            </TouchableOpacity>
-                        )}
-                        keyExtractor={(item) => item}
-                    />
-                )}
+                <View style={{flex:1, width: "100%"}}>
+                    {suggestions.length > 0 && (
+                        <FlatList
+                            style={styles.flatList}
+                            data={suggestions}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity onPressIn={() => handleSelectSuggestion(item)}>
+                                    <Text style={styles.suggestion}>{item}</Text>
+                                </TouchableOpacity>
+                            )}
+                            keyExtractor={(item) => item}
+                        />
+                    )}
+                </View>
             </View>
             <View style={styles.bottomArea}>
                 <TouchableOpacity style={styles.touchContainer} onPress={goTextToSpeech}>
@@ -147,22 +144,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5F5F5',
         padding: 20,
+        width: '100%'
     },
     searchArea: {
         flex: 0.7,
         width: '100%',
-        //justifyContent: 'center',
         alignItems: 'center',
     },
     flatList: {
         flex: 1,
-        //width: '100%',
     },
     bottomArea: {
         flex: 0.3,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     heading: {
         fontSize: 30,
@@ -185,17 +178,6 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         padding: 15,
-        fontSize: 18,
-    },
-    button: {
-        backgroundColor: '#007BFF',
-        padding: 15,
-        marginLeft: 10,
-        borderRadius: 10,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
         fontSize: 18,
     },
     icon: {

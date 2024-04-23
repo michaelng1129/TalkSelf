@@ -1,10 +1,9 @@
 import axios from 'axios';
-
-const { apiKey } = require('../components/MainScreen/constants');
+import { chatGptKey } from '..';
 
 const client = axios.create({
     headers: {
-        "Authorization": "Bearer " + apiKey,
+        "Authorization": "Bearer " + chatGptKey,
         "content-Type": "application/json"
     }
 })

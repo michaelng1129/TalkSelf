@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { Navigation, theme, nameValidator, emailValidator, passwordValidator, register, AuthContext, useAuth } from '../../core';
 import { Background, Logo, Header, Button, TextInput, BackButton } from '../../core/components/StartScreen';
 import { ImageLibraryOptions, ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
@@ -49,7 +49,7 @@ const RegisterScreen = ({ navigation }: Props) => {
     if (success) {
       login();
     } else {
-      //alert('Arrr matey! No treasure found. (Invalid credentials)');
+      Alert.alert('Please Input All of Field');
     }
   };
 
@@ -87,11 +87,11 @@ const RegisterScreen = ({ navigation }: Props) => {
 
       <View style={styles.avatarContainer}>
         {selectedImageUri ? (
-          <TouchableOpacity onPress={handleChoosePhoto}>
+          <TouchableOpacity onPress={handleChoosePhoto} >
             <Image source={{ uri: selectedImageUri }} style={styles.avatar} />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={handleChoosePhoto}>
+          <TouchableOpacity onPress={handleChoosePhoto} >
             <Avatar.Icon size={100} icon="camera" />
           </TouchableOpacity>
         )}
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 24,
+    backgroundColor: theme.colors.primary
   },
   row: {
     flexDirection: 'row',

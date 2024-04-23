@@ -15,6 +15,4 @@ export { default as WrittingQuizScreen } from './WrittingQuizScreen';
 export { default as ListeningQuizScreen } from './ListeningQuizScreen';
 export { default as SpeakingQuizScreen } from './SpeakingQuizScreen'
 
-export { default as ChatView } from './ChatView';
-
 export { default as ReadingTest } from './ReadingTest';

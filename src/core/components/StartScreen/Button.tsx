@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button as PaperButton, DefaultTheme } from 'react-native-paper';
+import { theme } from '../..';
 
 type Props = React.ComponentProps<typeof PaperButton>;
 
 const Button = ({ mode, style, children, ...props }: Props) => (
-    <PaperButton style={[styles.button, mode === 'outlined' && { backgroundColor: DefaultTheme.colors.surface }, style]} labelStyle={styles.text} mode={mode} {...props}>
+    <PaperButton style={[styles.button, mode === 'outlined' && { backgroundColor: DefaultTheme.colors.surface }, { borderColor: theme.colors.primary }, style]} labelStyle={styles.text} mode={mode} {...props}>
         {children}
     </PaperButton>
 );
