@@ -67,8 +67,10 @@ yarn-error.log
 
 # api
 src/core/components/MainScreen/constants.js
+APIKey.tsx
 
 # pylib
 /venv
 /backend
 /checkpoints
+
