@@ -4,6 +4,7 @@ import { Navigation, theme, nameValidator, emailValidator, passwordValidator, re
 import { Background, Logo, Header, Button, TextInput, BackButton } from '../../core/components/StartScreen';
 import { ImageLibraryOptions, ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
 import { Avatar } from 'react-native-paper';
+import * as RNFS from '@dr.pogodin/react-native-fs';
 
 type Props = {
   navigation: Navigation;
@@ -15,6 +16,7 @@ const RegisterScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  //const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const { login } = useAuth();
 
   const onSignUpPressed = async () => {
@@ -34,15 +36,12 @@ const RegisterScreen = ({ navigation }: Props) => {
     formData.append('name', name.value);
     formData.append('email', email.value);
     formData.append('password', password.value);
+
     if (selectedImageUri) {
-      const imageUriParts = selectedImageUri.split('.');
-      const imageType = imageUriParts[imageUriParts.length - 1];
-      formData.append('image', {
-        uri: selectedImageUri,
-        type: `image/${imageType}`,
-        name: `photo.${imageType}`
-      });
+      const imageBlob = await RNFS.readFile(selectedImageUri, 'base64');
+      formData.append('image', imageBlob)
     }
+
 
     const success = await register(formData);
 
@@ -70,6 +69,7 @@ const RegisterScreen = ({ navigation }: Props) => {
       } else {
         if (response.assets && response.assets.length > 0 && response.assets[0]?.uri) {
           const imageUri = response.assets[0].uri;
+
           setSelectedImageUri(imageUri);
           console.log(imageUri)
         }

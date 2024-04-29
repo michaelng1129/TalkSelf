@@ -10,10 +10,29 @@ import { ActivityIndicator } from "react-native-paper";
 
 const DictionarySearchScreen = () => {
     const route = useRoute();
-    const { searchText } = route.params as { searchText: string };
+    //const { searchText } = route.params as { searchText: string };
+    const [searchText, setSearchText] = useState<string>('');
     const [results, setResults] = useState<{ pos: string, def: string }[]>([]);
     const [videoUri, setVideoUri] = useState<string | null>(null);
     const [showVideo, setShowVideo] = useState(false);
+
+    useEffect(() => {
+        getSearchText();
+        return () => {
+            AsyncStorage.removeItem('searchText').then(() => {
+                console.log('searchText removed');
+            }).catch(error => {
+                console.error('Error removing searchText:', error);
+            });
+        };
+    }, []);
+
+    const getSearchText = async () => {
+        const temp = await AsyncStorage.getItem('searchText');
+        if (temp) {
+            setSearchText(temp)
+        }
+    }
 
     const getTextToSpeech = async () => {
         try {
@@ -104,7 +123,7 @@ const DictionarySearchScreen = () => {
                             </View>
                         ) : (
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <ActivityIndicator size={'small'} color={'black'}/>
+                                <ActivityIndicator size={'small'} color={'black'} />
                                 <Text>Video is Loading...</Text>
                             </View>
                         )}
@@ -175,12 +194,12 @@ const styles = StyleSheet.create({
 
     },
     playButton: {
-        backgroundColor: '#000000', 
+        backgroundColor: '#000000',
         padding: 10,
         borderRadius: 5,
     },
     buttonText: {
-        color: '#FFFFFF', 
+        color: '#FFFFFF',
     },
 });
 

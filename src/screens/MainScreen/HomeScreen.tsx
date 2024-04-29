@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { mountDatabase, Navigation, theme } from "../../core";
 import { open, QueryResult } from "react-native-quick-sqlite";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
     navigation: Navigation;
@@ -41,12 +42,17 @@ const MainScreen = ({ navigation }: Props) => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
 
     const goResult = () => {
-        navigation.navigate('DictionarySearchScreen', { searchText });
+        navigation.navigate('DictionarySearchScreen');
     }
 
     const goTextToSpeech = () => {
         navigation.navigate('TextToSpeechScreen');
     }
+
+    const clearSearchText = () => {
+        setSearchText('');
+        setSuggestions([]);
+    };
 
 
     const searchWords = async (word: string) => {
@@ -74,28 +80,20 @@ const MainScreen = ({ navigation }: Props) => {
 
     const handleWordChange = async (word: string) => {
         setSearchText(word);
+        console.log('handleWordChange: ', word)
         const suggestions = await searchWords(word);
         if (suggestions) {
             setSuggestions(suggestions);
         }
     };
 
-    const clearSearchText = () => {
-        setSearchText('');
-        setSuggestions([]);
-    };
-
-    const handleSearch = () => {
-        console.log("Search for:", searchText);
-        goResult();
-    };
-
-    const handleSelectSuggestion = (word: string) => {
+    const handleSelectSuggestion = async (word: string) => {
+        await AsyncStorage.setItem('searchText', word);
         setSearchText(word);
         setSuggestions([]);
-        handleSearch();
+        Keyboard.dismiss();
+        goResult();
     };
-
 
     return (
         <View style={styles.container}>
@@ -114,7 +112,7 @@ const MainScreen = ({ navigation }: Props) => {
                         </TouchableOpacity>
                     )}
                 </View>
-                <View style={{flex:1, width: "100%"}}>
+                <View style={{ flex: 1, width: "100%" }}>
                     {suggestions.length > 0 && (
                         <FlatList
                             style={styles.flatList}

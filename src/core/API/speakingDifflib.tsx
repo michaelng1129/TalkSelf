@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const speakingDifflib = async (audioBlob: string, jwt: string, question: string) => {
 
@@ -11,9 +12,9 @@ const speakingDifflib = async (audioBlob: string, jwt: string, question: string)
             }
 
         });
-        console.log('Upload successful:', response.data);
-        console.log(response.data)
-        return true;
+        console.log('Upload successful');
+        //await AsyncStorage.setItem('speakingResult', response.data)
+        return response.data;
     } catch (error: any) {
         console.log('Error occurred during login:', error);
         return false;
