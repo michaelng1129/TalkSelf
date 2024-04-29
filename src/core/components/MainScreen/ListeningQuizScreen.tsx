@@ -1,5 +1,6 @@
 import React, { memo, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { theme } from "../../theme";
 
 const ListeningQuizScreen = () => {
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -85,12 +86,12 @@ const styles = StyleSheet.create({
     startButton: {
         paddingVertical: 10,
         paddingHorizontal: 20,
-        backgroundColor: 'black',
+        backgroundColor: theme.colors.blackBackGround,
         borderRadius: 5,
     },
     startButtonText: {
         fontSize: 16,
-        color: '#FFFFFF',
+        color: theme.colors.text,
     },
     quizContainer: {
         flex: 1,

@@ -1,6 +1,6 @@
-import React, { memo, useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import { Navigation } from "../../core";
+import React, { memo } from "react";
+import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
+import { Navigation, theme } from "../../core";
 
 
 type Props = {
@@ -16,18 +16,22 @@ const QuizScreen = ({ navigation }: Props) => {
         <View style={styles.container}>
             <View style={styles.row}>
                 <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('ReadingQuizScreen')}>
-                    <Text style={styles.text}>Reading Quiz</Text>
+                <Image source={require('../../assets/reading.png')} style={styles.image} />
+
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('WrittingQuizScreen')}>
-                    <Text style={styles.text}>Writing Quiz</Text>
+                <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('WritingQuizScreen')}>
+                <Image source={require('../../assets/writing.png')} style={styles.image} />
+
                 </TouchableOpacity>
             </View>
             <View style={styles.row}>
                 <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('ListeningQuizScreen')}>
-                    <Text style={styles.text}>Listening Quiz</Text>
+                <Image source={require('../../assets/listening.png')} style={styles.image} />
+
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.touchArea} onPress={() => handleButtonPress('SpeakingQuizScreen')}>
-                    <Text style={styles.text}>Speaking Quiz</Text>
+                <Image source={require('../../assets/speaking.png')} style={styles.image} />
+
                 </TouchableOpacity>
             </View>
         </View>
@@ -47,16 +51,21 @@ const styles = StyleSheet.create({
     },
     touchArea: {
         width: 150, 
-        height: 300,
-        backgroundColor: 'black',
+        height: 250,
+        backgroundColor: theme.colors.whiteBackground,
         marginRight: 20, 
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 1
     },
     text: {
         fontSize: 18,
         color: 'white'
     },
+    image: {
+        width: 100, 
+        height: 130,
+    }
 });
 
 export default memo(QuizScreen);

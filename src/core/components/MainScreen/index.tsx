@@ -11,7 +11,7 @@ export { default as TextToSpeechPlayerScreen } from './TextToSpeechPlayerScreen'
 
 
 export { default as ReadingQuizScreen } from './ReadingQuizScreen';
-export { default as WrittingQuizScreen } from './WrittingQuizScreen';
+export { default as WritingQuizScreen } from './WritingQuizScreen';
 export { default as ListeningQuizScreen } from './ListeningQuizScreen';
 export { default as SpeakingQuizScreen } from './SpeakingQuizScreen'
 

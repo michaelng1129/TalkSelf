@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen, QuizScreen, SettingScreen, StudyPlanScreen, TalkIndexScreen } from '../../screens';
-import { DictionarySearchScreen, TextToSpeechScreen, ReadingQuizScreen, WrittingQuizScreen, ListeningQuizScreen, SpeakingQuizScreen, SpeechRecognitionRootScreen, TextToSpeechPlayerScreen, } from '../components/MainScreen';
+import { DictionarySearchScreen, TextToSpeechScreen, ReadingQuizScreen, WritingQuizScreen, ListeningQuizScreen, SpeakingQuizScreen, SpeechRecognitionRootScreen, TextToSpeechPlayerScreen, } from '../components/MainScreen';
 import { HeaderBackButton } from '@react-navigation/elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -72,7 +72,7 @@ const QuizStackNavigator = () => (
     <Stack.Screen name='ReadingQuizScreen' component={ReadingQuizScreen} options={({ navigation }) => ({
       headerTitle: '', headerLeft: () => (<HeaderBackButton labelVisible={false} onPress={() => { navigation.goBack(); }} />)
     })} />
-    <Stack.Screen name='WrittingQuizScreen' component={WrittingQuizScreen} options={({ navigation }) => ({
+    <Stack.Screen name='WritingQuizScreen' component={WritingQuizScreen} options={({ navigation }) => ({
       headerTitle: '', headerLeft: () => (<HeaderBackButton labelVisible={false} onPress={() => { navigation.goBack(); }} />)
     })} />
     <Stack.Screen name='ListeningQuizScreen' component={ListeningQuizScreen} options={({ navigation }) => ({

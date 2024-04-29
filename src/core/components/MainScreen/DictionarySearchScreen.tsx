@@ -1,6 +1,5 @@
-import { useRoute } from "@react-navigation/native";
 import React, { memo, useEffect, useState } from "react";
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { open, QueryResult } from "react-native-quick-sqlite";
 import { TextToSpeech } from "../..";
 import Video from 'react-native-video';
@@ -9,8 +8,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native-paper";
 
 const DictionarySearchScreen = () => {
-    const route = useRoute();
-    //const { searchText } = route.params as { searchText: string };
     const [searchText, setSearchText] = useState<string>('');
     const [results, setResults] = useState<{ pos: string, def: string }[]>([]);
     const [videoUri, setVideoUri] = useState<string | null>(null);
