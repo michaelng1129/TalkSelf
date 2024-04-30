@@ -4,7 +4,7 @@ export { default as RegisterScreen } from './StartScreen/RegisterScreen';
 export { default as ForgotPasswordScreen } from './StartScreen/ForgotPasswordScreen';
 
 export { default as HomeScreen } from './MainScreen/HomeScreen';
-export { default as StudyPlanScreen } from './MainScreen/StudyPlanScreen';
+export { default as PerformanceScreen } from './MainScreen/PerformanceScreen';
 export { default as TalkIndexScreen } from './MainScreen/TalkIndexScreen';
 export { default as QuizScreen } from './MainScreen/QuizScreen';
 export { default as SettingScreen } from './MainScreen/SettingScreen';

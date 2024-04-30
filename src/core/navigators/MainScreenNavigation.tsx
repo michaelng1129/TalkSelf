@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen, QuizScreen, SettingScreen, StudyPlanScreen, TalkIndexScreen } from '../../screens';
+import { HomeScreen, QuizScreen, SettingScreen, PerformanceScreen, TalkIndexScreen } from '../../screens';
 import { DictionarySearchScreen, TextToSpeechScreen, ReadingQuizScreen, WritingQuizScreen, ListeningQuizScreen, SpeakingQuizScreen, SpeechRecognitionRootScreen, TextToSpeechPlayerScreen, } from '../components/MainScreen';
 import { HeaderBackButton } from '@react-navigation/elements';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,8 +19,8 @@ const MainScreenNavigation = () => (
         
         if (route.name === 'Home') {
           iconName = focused ? 'home' : 'home-outline';
-        } else if (route.name === 'StudyPlan') {
-          iconName = focused ? 'person-add' : 'person-add-outline';
+        } else if (route.name === 'Performance') {
+          iconName = focused ? 'podium' : 'podium-outline';
         } else if (route.name === 'Talking') {
           iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
         } else if (route.name === 'Quiz') {
@@ -34,7 +34,7 @@ const MainScreenNavigation = () => (
       tabBarActiveTintColor: 'black',
     })}>
     <Tab.Screen name='Home' component={HomeStackNavigator} options={{ title: '' }} />
-    {/* <Tab.Screen name='StudyPlan' component={StudyPlanScreen} options={{ title: '' }} /> */}
+    <Tab.Screen name='Performance' component={PerformanceScreen} options={{ title: '' }} />
     <Tab.Screen name='Talking' component={TalkStackNavigator} options={{ title: '' }} />
     <Tab.Screen name='Quiz' component={QuizStackNavigator} options={{ title: '' }} />
     <Tab.Screen name='Setting' component={SettingScreen} options={{ title: '' }} />

@@ -1,16 +1,16 @@
 import axios from 'axios';
-import { chatGptKey } from '..';
+import { chatGptKey } from '../API/APIKey';
 
 const client = axios.create({
     headers: {
         "Authorization": "Bearer " + chatGptKey,
-        "content-Type": "application/json"
+        "Content-Type": "application/json"
     }
 })
 
 const chatGptEndPoint = 'https://api.openai.com/v1/chat/completions';
 
-const apiCall = async (messages: any) => {
+const chatGPTCall = async (messages: any) => {
     try {
         const res = await client.post(chatGptEndPoint, {
             model: 'gpt-3.5-turbo',
@@ -36,4 +36,4 @@ const apiCall = async (messages: any) => {
 }
 
 
-export default apiCall;
+export default chatGPTCall;

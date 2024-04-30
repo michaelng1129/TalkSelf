@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Navigation } from '../../core';
+import { Navigation, theme } from '../../core';
 
 type Props = {
     navigation: Navigation;
@@ -25,11 +25,11 @@ const TalkIndexScreen = ({ navigation }: Props) => {
                 </View>
                 <View style={styles.featureContainer}>
                     <View style={styles.feature}>
-                        <Image source={require('../../assets/dalleIcon.png')} style={styles.icon} />
-                        <Text style={styles.featureText}>DALL-E</Text>
+                        <Image source={require('../../assets/ttsIcon.png')} style={styles.icon} />
+                        <Text style={styles.featureText}>TTS</Text>
                     </View>
                     <Text style={styles.featureDescription}>
-                        DALL-E can generate imaginative and diverse images from textual descriptions, expanding the boundaries of visual creativity.
+                    Speech engine based on language learning model.
                     </Text>
                 </View>
                 <View style={styles.featureContainer}>
@@ -38,7 +38,7 @@ const TalkIndexScreen = ({ navigation }: Props) => {
                         <Text style={styles.featureText}>Smart AI</Text>
                     </View>
                     <Text style={styles.featureDescription}>
-                        A powerful voice assistant with the abilities of ChatGPT and Dall-E, providing you the best of both worlds.
+                        Communicate with users using AI feedback and a standard pronunciation engine.
                     </Text>
                 </View>
             </ScrollView>
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     },
     featureDescription: {
         fontSize: 16,
-        color: '#555',
     },
 });
 

@@ -21,5 +21,7 @@ export const theme = {
     sQBoard: '#ccc',
     greenText: '#009900',
     topBar: '#8c8c8c',
+    correctAnswer: '#00EC00',
+    transparent: '#00000000',
   },
 };

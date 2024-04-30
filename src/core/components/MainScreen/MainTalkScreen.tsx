@@ -3,10 +3,9 @@ import { StyleSheet, View, SafeAreaView, Image, ScrollView, Text, TouchableOpaci
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSpeechRecognition } from 'react-native-voicebox-speech-rec';
 import { useCheckSpeechRecPermissions, useRequestSpeechRecPermissions, } from './SpeechRecordPermissions.tsx';
-import { theme } from "../..";
+import { chatGPTCall, theme } from "../..";
 import { RESULTS } from "react-native-permissions";
 import { MicrophoneButton, ButtonToolTips } from "./";
-import apiCall from "../../API/chatGPT.tsx";
 import Tts from 'react-native-tts';
 
 interface Message {
@@ -108,7 +107,7 @@ const MainTalkScreen = () => {
 
         updateScrollView();
 
-        apiCall(newMessages).then(res => {
+        chatGPTCall(newMessages).then(res => {
             setLoading(false);
             //console.log('newMessages ', res)
             if (res.success) {

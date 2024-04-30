@@ -8,6 +8,7 @@ import { theme } from "../..";
 import * as Progress from 'react-native-progress';
 
 const SpeakingQuizScreen = () => {
+    const [showQuestions, setShowQuestions] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [audioPath, setAudioPath] = useState("");
     const [audioRecorderPlayer, setAudioRecorderPlayer] = useState(new AudioRecorderPlayer());
@@ -17,7 +18,6 @@ const SpeakingQuizScreen = () => {
     const [isQuizFinished, setIsQuizFinished] = useState(false);
     const [totalScore, setTotalScore] = useState<number[]>([]);
     const [showFinishButton, setShowFinishButton] = useState(false);
-    const [showQuestions, setShowQuestions] = useState(false);
     const [progress, setProgress] = useState(0);
 
     const questions = [
@@ -38,7 +38,6 @@ const SpeakingQuizScreen = () => {
 
     const handleStartQuiz = () => {
         setShowQuestions(true);
-
     };
 
     const onStartRecording = async () => {
@@ -146,7 +145,6 @@ const SpeakingQuizScreen = () => {
                             </View>
                             <View style={styles.areaCContainer}>
                                 <View style={styles.microphoneContainer}>
-
                                     <View>
                                         {diffResult && diffResult.similarity !== null && (
                                             <Text style={styles.similarityText}>Marks: {diffResult.similarity}/100</Text>

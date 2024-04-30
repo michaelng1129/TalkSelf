@@ -1,70 +1,168 @@
 import React, { memo, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, Dimensions } from "react-native";
-import { Navigation } from "../..";
+import { StyleSheet, View, Text, ScrollView, Dimensions, TouchableOpacity } from "react-native";
+import { Navigation, theme } from "../..";
 
-const { height: windowHeight } = Dimensions.get('window');
 
 type Props = {
     navigation: Navigation;
 };
 
-const ReadingQuizScreen = ({ navigation }: Props) => {
-    const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
+const ReadingQuizScreen = () => {
+    const [showQuestions, setShowQuestions] = useState(false);
+    const [questionIndex, setQuestionIndex] = useState(0);
+    const [isQuizFinished, setIsQuizFinished] = useState(false);
+    const [totalScore, setTotalScore] = useState<number>(0);
+    const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
+    const [currentAnswer, setCurrentAnswer] = useState<number | null>(null);
+    const [isOptionDisabled, setIsOptionDisabled] = useState(false);
+    const [showFinishButton, setShowFinishButton] = useState(false);
+    const [isNextQuestion, setIsNextQuestion] = useState(false);
 
-    // Sample article content (Hardcoded)
-    const articleContent = `
-    The United States and the European Union say they are looking at imposing further sanctions on Iran, after its attack on Israel at the weekend.
 
-    US Treasury Secretary Janet Yellen said she expected to take action "in the coming days", while EU foreign policy chief Josep Borrell said the bloc was working on it.
-    
-    Israel has urged its allies to sanction Tehran's missile programme.
-    
-    United Nations sanctions over the programme expired in October.
-    
-    Those sanctions had been linked to a wider deal to limit Iran's nuclear programme.
-    
-    However a number of countries including the US, EU and UK maintained sanctions and added new ones.
-    
-    The Israeli military's chief of staff, Lt Gen Herzi Halevi, said on Monday that the Iranian attack would not go unanswered.
-    `;
 
-    // Sample quiz questions (Hardcoded)
+
+    const articleContent = `The Amazon rainforest, often referred to as the 'lungs of the Earth,' is home to an incredible diversity of flora and fauna. Covering over 5.5 million square kilometers, it is the largest tropical rainforest on the planet. The Amazon plays a crucial role in regulating the Earth's climate by absorbing carbon dioxide and releasing oxygen. 
+    However, rampant deforestation driven by agriculture, logging, and infrastructure development poses a grave threat to this ecosystem. Conservation efforts are underway to protect the Amazon and its indigenous communities, but urgent action is needed to mitigate the impacts of deforestation.`;
+
+
     const quizQuestions = [
-        { question: "What was the nature of Iran's attack on Israel over the weekend?", options: ["Israel's infrastructure.", "Israeli military bases", "Israeli-owned vessel in the Arabian Sea."], correctOptionIndex: 0 },
-        { question: "Question 2", options: ["Option 1", "Option 2", "Option 3"], correctOptionIndex: 1 },
-        // Add more questions as needed
+        {
+            "question": "What is the Amazon rainforest often called?",
+            "options": ["The Heart of the Earth", "The Lungs of the Earth", "The Crown of the Earth", "The Veins of the Earth"],
+            "answer": 1
+        },
+        {
+            "question": "How large is the Amazon rainforest?",
+            "options": ["2.5 million square kilometers", "3.5 million square kilometers", "4.5 million square kilometers", "5.5 million square kilometers"],
+            "answer": 3
+        },
+        {
+            "question": "What is one crucial role of the Amazon rainforest?",
+            "options": ["Releasing carbon dioxide", "Regulating the Earth's climate", "Causing deforestation", "Encouraging logging"],
+            "answer": 1
+        },
+        {
+            "question": "What is the primary driver of deforestation in the Amazon?",
+            "options": ["Conservation efforts", "Agriculture", "Indigenous communities", "Infrastructure development"],
+            "answer": 1
+        },
+        {
+            "question": "What is needed to mitigate the impacts of deforestation?",
+            "options": ["More logging", "Rampant deforestation", "Urgent action", "Agricultural expansion"],
+            "answer": 2
+        }
     ];
 
-    const handleQuestionChange = (index: number) => {
-        setSelectedQuestionIndex(index);
+    const baseScorePerQuestion = 100 / quizQuestions.length;
+
+    const handleStartQuiz = () => {
+        setShowQuestions(true);
+    };
+
+    const handleNextQuestion = () => {
+        setQuestionIndex(prevIndex => prevIndex + 1);
+        setIsOptionDisabled(false);
+        setCurrentAnswer(null);
+        setCorrectAnswer(null);
+        setIsNextQuestion(false);
+    };
+
+    const handleFinishQuiz = () => {
+        setIsQuizFinished(true);
     }
+
+    const handleOptionSelect = (selectAnswer: number) => {
+        const answer = quizQuestions[questionIndex].answer;
+        setCorrectAnswer(answer)
+        if (selectAnswer === answer) {
+            setCurrentAnswer(answer)
+            setTotalScore(prevTotalScore => prevTotalScore + baseScorePerQuestion);
+        } else {
+            setCurrentAnswer(selectAnswer)
+        }
+        setIsOptionDisabled(true)
+
+        if (questionIndex === quizQuestions.length - 1) {
+            setShowFinishButton(true)
+        } else {
+            setIsNextQuestion(true);
+        }
+
+    };
 
     return (
         <View style={styles.container}>
-            {/* Upper Half: Article */}
-            <View style={[styles.section, { height: windowHeight * 0.4 }]}>
-                <ScrollView>
-                    <Text style={styles.article}>{articleContent}</Text>
-                </ScrollView>
-            </View>
+            {!showQuestions && (
+                <View style={styles.container}>
+                    <Text style={styles.questionHeading}>Please read the following article and answer the question</Text>
+                    <View style={styles.space} />
+                    <View>
+                        <TouchableOpacity style={styles.startButton} onPress={handleStartQuiz}>
+                            <Text style={styles.startButtonText}>Start Reading Quiz</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )}
 
-            {/* Lower Half: Quiz Questions */}
-            <View style={[styles.section, { height: windowHeight * 0.4 }]}>
-                <ScrollView horizontal pagingEnabled>
-                    {quizQuestions.map((question, index) => (
-                        <View key={index} style={styles.questionContainer}>
-                            <Text style={styles.question}>{question.question}</Text>
-                            {/* Render options */}
-                            {question.options.map((option, optionIndex) => (
-                                <View key={optionIndex} style={styles.optionContainer}>
-                                    <Text style={styles.optionSymbol}>•</Text>
-                                    <Text style={styles.optionText}>{option}</Text>
-                                </View>
-                            ))}
+            {showQuestions && (
+                <View>
+                    {isQuizFinished ? (
+                        <View>
+                            <Text style={styles.totalScore}>Total Score: {totalScore.toFixed(2)}/100</Text>
                         </View>
-                    ))}
-                </ScrollView>
-            </View>
+                    ) : (
+                        <View style={styles.container}>
+                            <View style={styles.areaAContainer}>
+                                <ScrollView showsVerticalScrollIndicator={false}>
+                                    <Text style={styles.articleText}>{articleContent}</Text>
+                                </ScrollView>
+                            </View>
+                            <View style={styles.areaBContainer}>
+                                <Text style={styles.question}>{quizQuestions[questionIndex].question}</Text>
+                                {quizQuestions[questionIndex].options.map((item, index) => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={index}
+                                            onPress={() => handleOptionSelect(index)}
+                                            disabled={isOptionDisabled}
+                                            style={{
+                                                backgroundColor: currentAnswer === correctAnswer && index === correctAnswer
+                                                    ? theme.colors.correctAnswer
+                                                    : currentAnswer === index
+                                                        ? theme.colors.error
+                                                        : correctAnswer === index
+                                                            ? theme.colors.correctAnswer
+                                                            : theme.colors.transparent,
+                                                padding: 10,
+                                                marginTop: 15,
+                                                borderRadius: 5,
+                                                borderWidth: 1,
+                                            }}
+                                        >
+                                            <Text style={styles.questionOptions}>{item}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                })}
+                            </View>
+                            <View style={styles.areaCContainer}>
+                                {showFinishButton ? (
+                                    <TouchableOpacity onPress={handleFinishQuiz} style={styles.finishButton}>
+                                        <Text style={styles.finishButtonText}>Finish</Text>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <View>
+                                        {isNextQuestion && (
+                                            <TouchableOpacity onPress={handleNextQuestion} style={styles.nextButton}>
+                                                <Text style={styles.nextButtonText}>Next</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                )}
+                            </View>
+                        </View>
+                    )}
+                </View>
+            )}
         </View>
     );
 }
@@ -72,41 +170,86 @@ const ReadingQuizScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-    },
-    section: {
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
     },
-    article: {
-        fontSize: 16,
-        textAlign: 'justify',
-    },
-    questionContainer: {
-        flex: 1,
+    startButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        backgroundColor: theme.colors.blackText,
+        borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        width: Dimensions.get('window').width,
-        paddingHorizontal: 100,
+    },
+    startButtonText: {
+        fontSize: 16,
+        color: theme.colors.text,
+    },
+    questionHeading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    space: {
+        height: 20,
+    },
+    areaAContainer: {
+        flex: 0.4,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    articleText: {
+        fontSize: 16
+    },
+    areaBContainer: {
+        flex: 0.45,
     },
     question: {
-        fontSize: 18,
+        fontSize: 16,
+        color: theme.colors.blackText,
         fontWeight: 'bold',
-        marginBottom: 10,
     },
-    optionContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 5,
-    },
-    optionSymbol: {
+    questionOptions: {
         fontSize: 16,
-        marginRight: 5,
+        color: theme.colors.blackText,
+        padding: 3,
     },
-    optionText: {
+    areaCContainer: {
+        flex: 0.15,
+    },
+    nextButton: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: theme.colors.blackBackGround,
+        borderRadius: 5,
+
+    },
+    nextButtonText: {
+        color: theme.colors.text,
+        textAlign: 'center',
         fontSize: 16,
-    }
+    },
+    finishButton: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: theme.colors.blackBackGround,
+        borderRadius: 5,
+    },
+    finishButtonText: {
+        color: theme.colors.text,
+        textAlign: 'center',
+        fontSize: 16,
+    },
+
+
+
+
+
+    totalScore: {
+        fontSize: 20,
+        color: theme.colors.blackText,
+    },
 });
 
 export default memo(ReadingQuizScreen);
