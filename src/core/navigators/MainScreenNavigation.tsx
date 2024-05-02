@@ -24,7 +24,7 @@ const MainScreenNavigation = () => (
         } else if (route.name === 'Talking') {
           iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
         } else if (route.name === 'Quiz') {
-          iconName = focused ? 'podium' : 'podium-outline';
+          iconName = focused ? 'clipboard' : 'clipboard-outline';
         } else if (route.name === 'Setting') {
           iconName = focused ? 'settings' : 'settings-outline';
         }
